@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.toybox.wjr.calendarlistview.MainActivity">
+
+    <TextView
+        android:id="@+id/select_date_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="24dp"
+        android:lineSpacingExtra="2.5sp"
+        android:textColor="#222222"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="请选择日期" />
+
+    <include
+        android:id="@+id/top_sequence_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17.5dp"
+        layout="@layout/item_top_sequence"
+        app:layout_constraintTop_toBottomOf="@id/select_date_label" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/calendar_list"
+        android:layout_width="match_parent"
+        android:layout_height="238dp"
+        android:overScrollMode="never"
+        app:layout_constraintTop_toBottomOf="@id/top_sequence_list" />
+
+</android.support.constraint.ConstraintLayout>

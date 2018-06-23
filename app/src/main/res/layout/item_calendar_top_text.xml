@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_calendar"
+    android:layout_width="wrap_content"
+    android:layout_height="23dp"
+    android:gravity="center"
+    android:lineSpacingExtra="4.5sp"
+    android:textColor="#9b9b9b"
+    android:textSize="10sp" />

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<FrameLayout android:layout_height="30dp"-->
+    <!--android:layout_marginBottom="10dp"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--xmlns:android="http://schemas.android.com/apk/res/android">-->
+    <!--<View-->
+        <!--android:id="@+id/single_selected_view"-->
+        <!--android:layout_width="30dp"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:background="@drawable/shape_calender_day_selected_single"-->
+        <!--android:layout_gravity="center"-->
+        <!--/>-->
+    <!--<TextView xmlns:android="http://schemas.android.com/apk/res/android"-->
+        <!--android:id="@+id/item_calendar"-->
+        <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="30dp"-->
+    <!--android:layout_marginBottom="10dp"-->
+        <!--android:gravity="center"-->
+        <!--android:lineSpacingExtra="2.5sp"-->
+        <!--android:textColor="#222222"-->
+        <!--android:textSize="12sp" />-->
+    <com.toybox.wjr.calendarlistview.CalendarDayView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_calendar"
+    android:layout_width="wrap_content"
+    android:layout_height="30dp"
+    android:layout_marginBottom="10dp"
+    android:gravity="center"
+    android:lineSpacingExtra="2.5sp"
+    android:textColor="#222222"
+    android:textSize="12sp"
+        />
+
+<!--</FrameLayout>-->

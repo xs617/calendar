@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="dark_sky_blue">#2ea9df</color>
+
+    <color name="colorCalendarTextValid">#222222</color>
+    <color name="colorCalendarTextInvalid">#bbbbbb</color>
+    <color name="colorCalendarTextSelected">#ffffff</color>
+
+    <color name="colorCalendarBgSelected">@color/dark_sky_blue</color>
+    <color name="colorCalendarBgUnselected">#00ffffff</color>
+</resources>

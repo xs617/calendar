@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements CalendarSelectObs
     }
 
     SimpleDateFormat yearMonthDayFormat = new SimpleDateFormat("YYYY年M月d日", Locale.CHINA);
-    SimpleDateFormat monthDayFormat = new SimpleDateFormat("MM月dd日", Locale.CHINA);
+    SimpleDateFormat monthDayFormat = new SimpleDateFormat("M月d日", Locale.CHINA);
 
     @Override
     public void onCalendarSelectChange(long fromDate, long toDate) {

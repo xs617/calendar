@@ -22,4 +22,6 @@
     <string name="Oct">十月</string>
     <string name="Nov">十一月</string>
     <string name="Dec">十二月</string>
+
+    <string name="selected_date_label">请选择日期</string>
 </resources>

@@ -4,7 +4,9 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
+import com.toybox.wjr.calendarlistview.CalendarSelectObserver;
 import com.toybox.wjr.calendarlistview.DayEntityBuilder;
+import com.toybox.wjr.calendarlistview.MainActivity;
 import com.toybox.wjr.calendarlistview.OnDayClickListener;
 import com.toybox.wjr.calendarlistview.entity.DayEntity;
 import com.toybox.wjr.calendarlistview.entity.MonthEntity;
@@ -199,6 +201,17 @@ public class MonthAdapter extends RecyclerView.Adapter implements OnDayClickList
             startSelectedDay.isSelected = true;
             notifyItemChanged(monthItemEntities.indexOf(monthEntity));
         }
+        if (calendarSelectObserver != null){
+            long fromDate = -1;
+            long toDate = -1;
+            if (startSelectedDay != null){
+                fromDate = startSelectedDay.date;
+            }
+            if (endSelectedDay != null){
+                toDate = endSelectedDay.date;
+            }
+            calendarSelectObserver.onCalendarSelectChange(fromDate,toDate);
+        }
     }
 
     public void getMoreDate() {
@@ -219,5 +232,11 @@ public class MonthAdapter extends RecyclerView.Adapter implements OnDayClickList
             monthEntities.add(monthEntity);
         }
         monthItemEntities.addAll(0, monthEntities);
+    }
+
+    private CalendarSelectObserver calendarSelectObserver;
+
+    public void setCalendarSelectObserver(CalendarSelectObserver calendarSelectObserver) {
+        this.calendarSelectObserver = calendarSelectObserver;
     }
 }

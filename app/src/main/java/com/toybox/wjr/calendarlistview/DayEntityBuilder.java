@@ -8,7 +8,7 @@ import java.util.List;
  * Created by Administrator on 2018/6/21 0021.
  */
 
-public interface CalendarItemEntityBuilder {
+public interface DayEntityBuilder {
     /**
      * 获取 timeMilli 为最后一行的该月数据
      *

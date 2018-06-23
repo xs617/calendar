@@ -21,17 +21,22 @@
 
     <include
         android:id="@+id/top_sequence_list"
+        layout="@layout/item_top_sequence"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="17.5dp"
-        layout="@layout/item_top_sequence"
         app:layout_constraintTop_toBottomOf="@id/select_date_label" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/calendar_list"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="238dp"
-        android:overScrollMode="never"
-        app:layout_constraintTop_toBottomOf="@id/top_sequence_list" />
+        app:layout_constraintTop_toBottomOf="@id/top_sequence_list">
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/calendar_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 </android.support.constraint.ConstraintLayout>

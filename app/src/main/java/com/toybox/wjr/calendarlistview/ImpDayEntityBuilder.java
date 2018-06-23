@@ -10,7 +10,7 @@ import java.util.List;
  * Created by Administrator on 2018/6/21 0021.
  */
 
-public class ImpCalendarItemEntityBuilder implements CalendarItemEntityBuilder {
+public class ImpDayEntityBuilder implements DayEntityBuilder {
     final int WEEK_DAY_COUNT = 7;
 
     private long getMonthFirstDayOfWeekTimeMilli(long dateMilli) {

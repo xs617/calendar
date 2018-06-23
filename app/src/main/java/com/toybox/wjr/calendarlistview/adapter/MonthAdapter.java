@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import com.toybox.wjr.calendarlistview.CalendarItemEntityBuilder;
+import com.toybox.wjr.calendarlistview.DayEntityBuilder;
 import com.toybox.wjr.calendarlistview.OnDayClickListener;
 import com.toybox.wjr.calendarlistview.entity.DayEntity;
 import com.toybox.wjr.calendarlistview.entity.MonthEntity;
@@ -21,23 +21,25 @@ import java.util.List;
 
 public class MonthAdapter extends RecyclerView.Adapter implements OnDayClickListener {
     private final int TYPE_CALENDAR_ITEM = 2;
-    CalendarItemEntityBuilder itemEntityBuilder;
+    DayEntityBuilder dayEntityBuilder;
     List<MonthEntity> monthItemEntities = new ArrayList<MonthEntity>();
+    long currentLatestDate;
 
-    public MonthAdapter(CalendarItemEntityBuilder calendarItemEntityBuilder) {
-        this.itemEntityBuilder = calendarItemEntityBuilder;
+    public MonthAdapter(DayEntityBuilder dayEntityBuilder) {
+        this.dayEntityBuilder = dayEntityBuilder;
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
 
         MonthEntity monthItemEntity = new MonthEntity();
-        monthItemEntity.dayItemEntities = itemEntityBuilder.buildMonthDayEntities(System.currentTimeMillis());
+        monthItemEntity.dayItemEntities = this.dayEntityBuilder.buildMonthDayEntities(System.currentTimeMillis());
         monthItemEntity.month = calendar.get(Calendar.MONTH);
         monthItemEntity.year = calendar.get(Calendar.YEAR);
 
         //从11个月前开始，总计生成11个月
         calendar.add(Calendar.MONTH, -11);
-        List<List<DayEntity>> monthList = calendarItemEntityBuilder.buildRangEntities(calendar.getTimeInMillis(), 11);
+        currentLatestDate = calendar.getTimeInMillis();
+        List<List<DayEntity>> monthList = dayEntityBuilder.buildRangEntities(calendar.getTimeInMillis(), 11);
 
         for (int i = 0; i < 11; i++) {
             MonthEntity monthEntity = new MonthEntity();
@@ -197,5 +199,25 @@ public class MonthAdapter extends RecyclerView.Adapter implements OnDayClickList
             startSelectedDay.isSelected = true;
             notifyItemChanged(monthItemEntities.indexOf(monthEntity));
         }
+    }
+
+    public void getMoreDate() {
+        Calendar calendar = Calendar.getInstance();
+        int count = 12;
+        //从12个月前开始，总计生成12个月
+        calendar.setTimeInMillis(currentLatestDate);
+        calendar.add(Calendar.MONTH, count * -1);
+        currentLatestDate = calendar.getTimeInMillis();
+        List<List<DayEntity>> monthList = dayEntityBuilder.buildRangEntities(calendar.getTimeInMillis(), count);
+        List<MonthEntity> monthEntities = new ArrayList<MonthEntity>();
+        for (int i = 0; i < count; i++) {
+            MonthEntity monthEntity = new MonthEntity();
+            monthEntity.dayItemEntities = monthList.get(i);
+            monthEntity.month = calendar.get(Calendar.MONTH);
+            monthEntity.year = calendar.get(Calendar.YEAR);
+            calendar.add(Calendar.MONTH, 1);
+            monthEntities.add(monthEntity);
+        }
+        monthItemEntities.addAll(0, monthEntities);
     }
 }

@@ -26,6 +26,12 @@ public class MonthAdapter extends RecyclerView.Adapter implements OnDayClickList
     List<MonthEntity> monthItemEntities = new ArrayList<MonthEntity>();
     long currentLatestDate;
 
+    DayEntity startSelectedDay;
+    DayEntity endSelectedDay;
+    MonthEntity startMonth;
+    MonthEntity endMonth;
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd");
+
     public MonthAdapter(DayEntityBuilder dayEntityBuilder) {
         this.dayEntityBuilder = dayEntityBuilder;
 
@@ -85,17 +91,83 @@ public class MonthAdapter extends RecyclerView.Adapter implements OnDayClickList
         return TYPE_CALENDAR_ITEM;
     }
 
-    DayEntity startSelectedDay;
-    DayEntity endSelectedDay;
-    MonthEntity startMonth;
-    MonthEntity endMonth;
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd");
+
+
+    /**
+     * 向前生成一年份的日历
+     */
+    public void getMoreDate() {
+        Calendar calendar = Calendar.getInstance();
+        int count = 12;
+        //从12个月前开始，总计生成12个月
+        calendar.setTimeInMillis(currentLatestDate);
+        calendar.add(Calendar.MONTH, count * -1);
+        currentLatestDate = calendar.getTimeInMillis();
+        List<List<DayEntity>> monthList = dayEntityBuilder.buildRangEntities(calendar.getTimeInMillis(), count);
+        List<MonthEntity> monthEntities = new ArrayList<MonthEntity>();
+        for (int i = 0; i < count; i++) {
+            MonthEntity monthEntity = new MonthEntity();
+            monthEntity.dayItemEntities = monthList.get(i);
+            monthEntity.month = calendar.get(Calendar.MONTH);
+            monthEntity.year = calendar.get(Calendar.YEAR);
+            calendar.add(Calendar.MONTH, 1);
+            monthEntities.add(monthEntity);
+        }
+        monthItemEntities.addAll(0, monthEntities);
+    }
+
+
+
+    /**
+     * 日期选中点击事件
+     * @param monthEntity
+     * @param dayEntity
+     */
+    @Override
+    public void onDayClick(MonthEntity monthEntity, DayEntity dayEntity) {
+        //选中了start和end后点击，取消旧的，再单独选中新的
+        if (startSelectedDay != null && endSelectedDay != null) {
+            resetSelected();
+            startMonth = monthEntity;
+            startSelectedDay = dayEntity;
+            setDaySingleSelectedStatus(startSelectedDay);
+            notifyItemChanged(monthItemEntities.indexOf(monthEntity));
+        } else if (startSelectedDay != null) {
+            //已经选中了一个，如果新的和旧的不是 同一个就连成区域
+            if (isSameDay(startSelectedDay.date, dayEntity.date)) {
+                resetDaySelectedStatus(startSelectedDay);
+                notifyItemChanged(monthItemEntities.indexOf(startMonth));
+                startMonth = null;
+                startSelectedDay = null;
+            } else if (startSelectedDay.date > dayEntity.date) {
+                endSelectedDay = startSelectedDay;
+                startSelectedDay = dayEntity;
+                endMonth = startMonth;
+                startMonth = monthEntity;
+                batchSetDaySelectStatus();
+            } else {
+                endSelectedDay = dayEntity;
+                endMonth = monthEntity;
+                batchSetDaySelectStatus();
+            }
+        } else {
+            startSelectedDay = dayEntity;
+            startMonth = monthEntity;
+            setDaySingleSelectedStatus(startSelectedDay);
+            notifyItemChanged(monthItemEntities.indexOf(monthEntity));
+        }
+        notifySelectedDateChange();
+    }
 
     private boolean isSameDay(long d1, long d2) {
         return simpleDateFormat.format(d1).equals(simpleDateFormat.format(d2));
     }
 
-    private void batchSetDayCalendarSelectStatus() {
+
+    /**
+     * 批量设置日期选中状态
+     */
+    private void batchSetDaySelectStatus() {
         if (startMonth == null || endMonth == null || startSelectedDay == null || endSelectedDay == null) {
             return;
         }
@@ -134,72 +206,93 @@ public class MonthAdapter extends RecyclerView.Adapter implements OnDayClickList
 
     }
 
-    private void setDaySelectedStatus(DayEntity dayEntity) {
-        if (dayEntity == null) {
-            return;
-        }
-        dayEntity.isSelected = true;
-        dayEntity.isSelectedEnd = false;
-        dayEntity.isSelectedStart = false;
-    }
-
-    private void resetDaySelectStatus(List<DayEntity> dayItemEntities) {
-        for (int i = 0; i < dayItemEntities.size(); i++) {
-            DayEntity dayEntity = dayItemEntities.get(i);
-            dayEntity.isSelected = false;
-            dayEntity.isSelectedStart = false;
-            dayEntity.isSelectedEnd = false;
-        }
-    }
-
-    @Override
-    public void onDayClick(MonthEntity monthEntity, DayEntity dayEntity) {
-        //选中了start和end后点击，取消旧的，再单独选中新的
-        if (startSelectedDay != null && endSelectedDay != null) {
+    /**
+     * 清空所有选中状态
+     */
+    public void resetSelected() {
             int startMonthIndex = monthItemEntities.indexOf(startMonth);
             int endMonthIndex = monthItemEntities.indexOf(endMonth);
             if (startMonth != null && endMonth != null) {
                 for (int i = startMonthIndex; i < endMonthIndex + 1; i++) {
-                    resetDaySelectStatus(monthItemEntities.get(i).dayItemEntities);
+                resetDaySelectedStatus(monthItemEntities.get(i).dayItemEntities);
                 }
+        } else if (startSelectedDay != null) {
+            resetDaySelectedStatus(startSelectedDay);
+        } else if (endSelectedDay != null) {
+            resetDaySelectedStatus(endSelectedDay);
             }
             endMonth = null;
             endSelectedDay = null;
-            startMonth = monthEntity;
-            startSelectedDay = dayEntity;
-            startSelectedDay.isSelectedEnd = true;
-            startSelectedDay.isSelectedStart = true;
-            startSelectedDay.isSelected = true;
-            notifyItemRangeChanged(startMonthIndex, endMonthIndex - startMonthIndex + 1);
-            notifyItemChanged(monthItemEntities.indexOf(monthEntity));
-        } else if (startSelectedDay != null) {
-            //已经选中了一个，如果新的和旧的不是 同一个就连成区域
-            if (isSameDay(startSelectedDay.date, dayEntity.date)) {
-                startSelectedDay.isSelected = false;
-                startSelectedDay.isSelectedStart = false;
-                startSelectedDay.isSelectedEnd = false;
-                notifyItemChanged(monthItemEntities.indexOf(startMonth));
                 startMonth = null;
                 startSelectedDay = null;
-            } else if (startSelectedDay.date > dayEntity.date) {
-                endSelectedDay = startSelectedDay;
-                startSelectedDay = dayEntity;
-                endMonth = startMonth;
-                startMonth = monthEntity;
-                batchSetDayCalendarSelectStatus();
-            } else {
-                endSelectedDay = dayEntity;
-                endMonth = monthEntity;
-                batchSetDayCalendarSelectStatus();
+        notifyItemRangeChanged(startMonthIndex, endMonthIndex - startMonthIndex + 1);
+        notifySelectedDateChange();
             }
-        } else {
-            startSelectedDay = dayEntity;
-            startMonth = monthEntity;
+
+
+    private CalendarSelectObserver calendarSelectObserver;
+
+
+    /**
+     * 设置成单选状态
+     * @param dayEntity
+     */
+    private void setDaySingleSelectedStatus(DayEntity dayEntity) {
+        if (dayEntity != null) {
             startSelectedDay.isSelectedEnd = true;
             startSelectedDay.isSelectedStart = true;
             startSelectedDay.isSelected = true;
-            notifyItemChanged(monthItemEntities.indexOf(monthEntity));
         }
+    }
+
+    /***
+     * 设置成start,end之间的选中状态
+     * @param dayEntity
+     */
+    private void setDaySelectedStatus(DayEntity dayEntity) {
+        if (dayEntity != null) {
+            dayEntity.isSelected = true;
+            dayEntity.isSelectedEnd = false;
+            dayEntity.isSelectedStart = false;
+        }
+
+    }
+
+    /**
+     * 设置成未选中状态
+     * @param dayEntity
+     */
+    private void resetDaySelectedStatus(DayEntity dayEntity) {
+        if (dayEntity != null) {
+            dayEntity.isSelected = false;
+            dayEntity.isSelectedEnd = false;
+            dayEntity.isSelectedStart = false;
+        }
+    }
+
+    /**
+     * 设置成未选中状态
+     * @param dayItemEntities
+     */
+    private void resetDaySelectedStatus(List<DayEntity> dayItemEntities) {
+        for (int i = 0; i < dayItemEntities.size(); i++) {
+            DayEntity dayEntity = dayItemEntities.get(i);
+            resetDaySelectedStatus(dayEntity);
+        }
+    }
+
+
+    /**
+     * 设置回调选中监听
+     * @param calendarSelectObserver
+     */
+    public void setCalendarSelectObserver(CalendarSelectObserver calendarSelectObserver) {
+        this.calendarSelectObserver = calendarSelectObserver;
+        }
+    /**
+     * 回调选中监听
+     */
+    private void notifySelectedDateChange() {
         if (calendarSelectObserver != null){
             long fromDate = -1;
             long toDate = -1;
@@ -211,31 +304,5 @@ public class MonthAdapter extends RecyclerView.Adapter implements OnDayClickList
             }
             calendarSelectObserver.onCalendarSelectChange(fromDate,toDate);
         }
-    }
-
-    public void getMoreDate() {
-        Calendar calendar = Calendar.getInstance();
-        int count = 12;
-        //从12个月前开始，总计生成12个月
-        calendar.setTimeInMillis(currentLatestDate);
-        calendar.add(Calendar.MONTH, count * -1);
-        currentLatestDate = calendar.getTimeInMillis();
-        List<List<DayEntity>> monthList = dayEntityBuilder.buildRangEntities(calendar.getTimeInMillis(), count);
-        List<MonthEntity> monthEntities = new ArrayList<MonthEntity>();
-        for (int i = 0; i < count; i++) {
-            MonthEntity monthEntity = new MonthEntity();
-            monthEntity.dayItemEntities = monthList.get(i);
-            monthEntity.month = calendar.get(Calendar.MONTH);
-            monthEntity.year = calendar.get(Calendar.YEAR);
-            calendar.add(Calendar.MONTH, 1);
-            monthEntities.add(monthEntity);
-        }
-        monthItemEntities.addAll(0, monthEntities);
-    }
-
-    private CalendarSelectObserver calendarSelectObserver;
-
-    public void setCalendarSelectObserver(CalendarSelectObserver calendarSelectObserver) {
-        this.calendarSelectObserver = calendarSelectObserver;
     }
 }

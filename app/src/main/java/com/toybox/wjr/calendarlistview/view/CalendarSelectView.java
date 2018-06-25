@@ -1,4 +1,4 @@
-package com.toybox.wjr.calendarlistview;
+package com.toybox.wjr.calendarlistview.view;
 
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;
@@ -10,6 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.toybox.wjr.calendarlistview.CalendarSelectObserver;
+import com.toybox.wjr.calendarlistview.ImpDayEntityBuilder;
+import com.toybox.wjr.calendarlistview.R;
 import com.toybox.wjr.calendarlistview.adapter.MonthAdapter;
 import com.toybox.wjr.calendarlistview.holder.TopSequenceViewHolder;
 
@@ -102,6 +105,14 @@ public class CalendarSelectView extends ConstraintLayout implements CalendarSele
         } else {
             selectDate.setVisibility(View.GONE);
         }
+        if (customCalendarSelectObserver != null){
+            customCalendarSelectObserver.onCalendarSelectChange(fromDate,toDate);
+        }
+    }
+
+    private CalendarSelectObserver customCalendarSelectObserver;
+    public void setCalendarSelectObserver(CalendarSelectObserver calendarSelectObserver){
+        customCalendarSelectObserver = calendarSelectObserver;
     }
 
 }

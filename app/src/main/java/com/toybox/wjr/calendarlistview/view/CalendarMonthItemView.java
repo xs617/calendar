@@ -1,4 +1,4 @@
-package com.toybox.wjr.calendarlistview;
+package com.toybox.wjr.calendarlistview.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -12,6 +12,8 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.toybox.wjr.calendarlistview.OnDayClickListener;
+import com.toybox.wjr.calendarlistview.R;
 import com.toybox.wjr.calendarlistview.entity.DayEntity;
 import com.toybox.wjr.calendarlistview.entity.MonthEntity;
 
@@ -19,25 +21,25 @@ import com.toybox.wjr.calendarlistview.entity.MonthEntity;
  * Created by Administrator on 2018/6/22 0022.
  */
 
-public class CalendarMonthView extends View {
+public class CalendarMonthItemView extends View {
 
-    public CalendarMonthView(Context context) {
+    public CalendarMonthItemView(Context context) {
         super(context);
         init();
     }
 
-    public CalendarMonthView(Context context, AttributeSet attrs) {
+    public CalendarMonthItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public CalendarMonthView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CalendarMonthItemView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public CalendarMonthView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public CalendarMonthItemView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 

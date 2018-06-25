@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     tools:context="com.toybox.wjr.calendarlistview.MainActivity">
 
-    <com.toybox.wjr.calendarlistview.CalendarSelectView
+    <com.toybox.wjr.calendarlistview.view.CalendarSelectView
+        android:id="@+id/calendar_select_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

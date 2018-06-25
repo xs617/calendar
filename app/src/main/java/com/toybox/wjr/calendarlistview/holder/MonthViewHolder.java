@@ -1,17 +1,13 @@
 package com.toybox.wjr.calendarlistview.holder;
 
-import android.graphics.Rect;
-import android.graphics.RectF;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.toybox.wjr.calendarlistview.CalendarMonthView;
-import com.toybox.wjr.calendarlistview.CalendarUtil;
+import com.toybox.wjr.calendarlistview.view.CalendarMonthItemView;
 import com.toybox.wjr.calendarlistview.OnDayClickListener;
 import com.toybox.wjr.calendarlistview.entity.MonthEntity;
 import com.toybox.wjr.calendarlistview.R;
@@ -26,12 +22,12 @@ import java.util.Calendar;
 public class MonthViewHolder extends RecyclerView.ViewHolder {
     TextView monthLabel;
     MonthEntity monthEntity;
-    CalendarMonthView calendarMonthView;
+    CalendarMonthItemView calendarMonthItemView;
     Calendar calendar;
 
     public MonthViewHolder(View itemView) {
         super(itemView);
-        calendarMonthView = itemView.findViewById(R.id.calendar_month_view);
+        calendarMonthItemView = itemView.findViewById(R.id.calendar_month_view);
         monthLabel = itemView.findViewById(R.id.month_label);
         calendar = Calendar.getInstance();
     }
@@ -45,9 +41,9 @@ public class MonthViewHolder extends RecyclerView.ViewHolder {
             yearMonth = String.valueOf(monthItemEntity.year) + "年" + (monthItemEntity.month + 1) + "月";
         }
         monthLabel.setText(yearMonth);
-        if (calendarMonthView != null) {
-            calendarMonthView.onBind(monthItemEntity);
-            calendarMonthView.requestLayout();
+        if (calendarMonthItemView != null) {
+            calendarMonthItemView.onBind(monthItemEntity);
+            calendarMonthItemView.requestLayout();
         }
     }
 
@@ -56,8 +52,8 @@ public class MonthViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setOnDayClickListener(OnDayClickListener onDayClickListener) {
-        if (calendarMonthView != null) {
-            calendarMonthView.setOnDayClickListener(onDayClickListener);
+        if (calendarMonthItemView != null) {
+            calendarMonthItemView.setOnDayClickListener(onDayClickListener);
         }
     }
 

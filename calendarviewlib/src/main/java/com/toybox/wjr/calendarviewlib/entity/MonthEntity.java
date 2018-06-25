@@ -1,4 +1,4 @@
-package com.toybox.wjr.calendarlistview.entity;
+package com.toybox.wjr.calendarviewlib.entity;
 
 import java.util.List;
 

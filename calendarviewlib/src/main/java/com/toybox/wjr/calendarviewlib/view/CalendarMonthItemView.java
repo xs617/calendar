@@ -1,4 +1,4 @@
-package com.toybox.wjr.calendarlistview.view;
+package com.toybox.wjr.calendarviewlib.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -12,10 +12,10 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.toybox.wjr.calendarlistview.OnDayClickListener;
-import com.toybox.wjr.calendarlistview.R;
-import com.toybox.wjr.calendarlistview.entity.DayEntity;
-import com.toybox.wjr.calendarlistview.entity.MonthEntity;
+import com.toybox.wjr.calendarviewlib.OnDayClickListener;
+import com.toybox.wjr.calendarviewlib.R;
+import com.toybox.wjr.calendarviewlib.entity.DayEntity;
+import com.toybox.wjr.calendarviewlib.entity.MonthEntity;
 
 /**
  * Created by Administrator on 2018/6/22 0022.

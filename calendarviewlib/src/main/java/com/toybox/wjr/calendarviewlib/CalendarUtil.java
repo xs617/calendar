@@ -1,4 +1,4 @@
-package com.toybox.wjr.calendarlistview;
+package com.toybox.wjr.calendarviewlib;
 
 import android.content.Context;
 

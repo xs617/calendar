@@ -1,4 +1,4 @@
-package com.toybox.wjr.calendarlistview.entity;
+package com.toybox.wjr.calendarviewlib.entity;
 
 /**
  * Created by Administrator on 2018/6/20 0020.

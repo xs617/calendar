@@ -1,22 +1,12 @@
 package com.toybox.wjr.calendarlistview;
 
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewTreeObserver;
-import android.widget.TextView;
 
-import com.toybox.wjr.calendarlistview.adapter.MonthAdapter;
-import com.toybox.wjr.calendarlistview.holder.TopSequenceViewHolder;
-import com.toybox.wjr.calendarlistview.view.CalendarSelectView;
+import com.toybox.wjr.calendarviewlib.CalendarSelectObserver;
+import com.toybox.wjr.calendarviewlib.view.CalendarSelectView;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity  {
 

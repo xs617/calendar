@@ -1,4 +1,4 @@
-package com.toybox.wjr.calendarlistview.holder;
+package com.toybox.wjr.calendarviewlib.holder;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -7,10 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.toybox.wjr.calendarlistview.view.CalendarMonthItemView;
-import com.toybox.wjr.calendarlistview.OnDayClickListener;
-import com.toybox.wjr.calendarlistview.entity.MonthEntity;
-import com.toybox.wjr.calendarlistview.R;
+import com.toybox.wjr.calendarviewlib.OnDayClickListener;
+import com.toybox.wjr.calendarviewlib.R;
+import com.toybox.wjr.calendarviewlib.entity.MonthEntity;
+import com.toybox.wjr.calendarviewlib.view.CalendarMonthItemView;
 
 import java.util.Calendar;
 

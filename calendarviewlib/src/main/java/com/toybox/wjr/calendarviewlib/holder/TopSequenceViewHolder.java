@@ -1,4 +1,4 @@
-package com.toybox.wjr.calendarlistview.holder;
+package com.toybox.wjr.calendarviewlib.holder;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -8,8 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.toybox.wjr.calendarlistview.R;
-import com.toybox.wjr.calendarlistview.CalendarUtil;
+import com.toybox.wjr.calendarviewlib.CalendarUtil;
+import com.toybox.wjr.calendarviewlib.R;
 
 /**
  * Created by Administrator on 2018/6/21 0021.

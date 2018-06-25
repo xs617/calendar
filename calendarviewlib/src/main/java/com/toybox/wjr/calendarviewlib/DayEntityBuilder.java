@@ -1,6 +1,6 @@
-package com.toybox.wjr.calendarlistview;
+package com.toybox.wjr.calendarviewlib;
 
-import com.toybox.wjr.calendarlistview.entity.DayEntity;
+import com.toybox.wjr.calendarviewlib.entity.DayEntity;
 
 import java.util.List;
 

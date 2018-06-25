@@ -15,7 +15,7 @@
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="16dp"
         />
-    <com.toybox.wjr.calendarlistview.view.CalendarMonthItemView
+    <com.toybox.wjr.calendarviewlib.view.CalendarMonthItemView
         android:id="@+id/calendar_month_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

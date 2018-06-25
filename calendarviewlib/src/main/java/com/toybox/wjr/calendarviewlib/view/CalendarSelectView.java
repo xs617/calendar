@@ -1,4 +1,4 @@
-package com.toybox.wjr.calendarlistview.view;
+package com.toybox.wjr.calendarviewlib.view;
 
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;
@@ -10,11 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.toybox.wjr.calendarlistview.CalendarSelectObserver;
-import com.toybox.wjr.calendarlistview.ImpDayEntityBuilder;
-import com.toybox.wjr.calendarlistview.R;
-import com.toybox.wjr.calendarlistview.adapter.MonthAdapter;
-import com.toybox.wjr.calendarlistview.holder.TopSequenceViewHolder;
+import com.toybox.wjr.calendarviewlib.CalendarSelectObserver;
+import com.toybox.wjr.calendarviewlib.ImpDayEntityBuilder;
+import com.toybox.wjr.calendarviewlib.R;
+import com.toybox.wjr.calendarviewlib.adapter.MonthAdapter;
+import com.toybox.wjr.calendarviewlib.holder.TopSequenceViewHolder;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

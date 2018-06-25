@@ -92,7 +92,6 @@ public class MonthAdapter extends RecyclerView.Adapter implements OnDayClickList
     }
 
 
-
     /**
      * 向前生成一年份的日历
      */
@@ -117,9 +116,9 @@ public class MonthAdapter extends RecyclerView.Adapter implements OnDayClickList
     }
 
 
-
     /**
      * 日期选中点击事件
+     *
      * @param monthEntity
      * @param dayEntity
      */
@@ -210,24 +209,26 @@ public class MonthAdapter extends RecyclerView.Adapter implements OnDayClickList
      * 清空所有选中状态
      */
     public void resetSelected() {
-            int startMonthIndex = monthItemEntities.indexOf(startMonth);
-            int endMonthIndex = monthItemEntities.indexOf(endMonth);
-            if (startMonth != null && endMonth != null) {
-                for (int i = startMonthIndex; i < endMonthIndex + 1; i++) {
+        int startMonthIndex = monthItemEntities.indexOf(startMonth);
+        int endMonthIndex = monthItemEntities.indexOf(endMonth);
+        if (startMonth != null && endMonth != null) {
+            for (int i = startMonthIndex; i < endMonthIndex + 1; i++) {
                 resetDaySelectedStatus(monthItemEntities.get(i).dayItemEntities);
-                }
+            }
         } else if (startSelectedDay != null) {
             resetDaySelectedStatus(startSelectedDay);
+            notifyItemChanged(startMonthIndex);
         } else if (endSelectedDay != null) {
             resetDaySelectedStatus(endSelectedDay);
-            }
-            endMonth = null;
-            endSelectedDay = null;
-                startMonth = null;
-                startSelectedDay = null;
+            notifyItemChanged(endMonthIndex);
+        }
+        endMonth = null;
+        endSelectedDay = null;
+        startMonth = null;
+        startSelectedDay = null;
         notifyItemRangeChanged(startMonthIndex, endMonthIndex - startMonthIndex + 1);
         notifySelectedDateChange();
-            }
+    }
 
 
     private CalendarSelectObserver calendarSelectObserver;
@@ -235,6 +236,7 @@ public class MonthAdapter extends RecyclerView.Adapter implements OnDayClickList
 
     /**
      * 设置成单选状态
+     *
      * @param dayEntity
      */
     private void setDaySingleSelectedStatus(DayEntity dayEntity) {
@@ -260,6 +262,7 @@ public class MonthAdapter extends RecyclerView.Adapter implements OnDayClickList
 
     /**
      * 设置成未选中状态
+     *
      * @param dayEntity
      */
     private void resetDaySelectedStatus(DayEntity dayEntity) {
@@ -272,6 +275,7 @@ public class MonthAdapter extends RecyclerView.Adapter implements OnDayClickList
 
     /**
      * 设置成未选中状态
+     *
      * @param dayItemEntities
      */
     private void resetDaySelectedStatus(List<DayEntity> dayItemEntities) {
@@ -284,25 +288,27 @@ public class MonthAdapter extends RecyclerView.Adapter implements OnDayClickList
 
     /**
      * 设置回调选中监听
+     *
      * @param calendarSelectObserver
      */
     public void setCalendarSelectObserver(CalendarSelectObserver calendarSelectObserver) {
         this.calendarSelectObserver = calendarSelectObserver;
-        }
+    }
+
     /**
      * 回调选中监听
      */
     private void notifySelectedDateChange() {
-        if (calendarSelectObserver != null){
+        if (calendarSelectObserver != null) {
             long fromDate = -1;
             long toDate = -1;
-            if (startSelectedDay != null){
+            if (startSelectedDay != null) {
                 fromDate = startSelectedDay.date;
             }
-            if (endSelectedDay != null){
+            if (endSelectedDay != null) {
                 toDate = endSelectedDay.date;
             }
-            calendarSelectObserver.onCalendarSelectChange(fromDate,toDate);
+            calendarSelectObserver.onCalendarSelectChange(fromDate, toDate);
         }
     }
 }

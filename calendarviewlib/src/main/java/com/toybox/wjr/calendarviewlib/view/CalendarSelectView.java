@@ -115,4 +115,10 @@ public class CalendarSelectView extends ConstraintLayout implements CalendarSele
         customCalendarSelectObserver = calendarSelectObserver;
     }
 
+    public void resetSelected() {
+        if (calendarAdapter != null){
+            calendarAdapter.resetSelected();
+        }
+    }
+
 }

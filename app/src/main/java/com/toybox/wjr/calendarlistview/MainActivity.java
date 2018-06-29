@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity  {
         calendarSelectView = findViewById(R.id.calendar_select_view);
         calendarSelectView.setCalendarSelectObserver(new CalendarSelectObserver() {
             @Override
-            public void onCalendarSelectChange(long fromDate, long toDate) {
+            public void onCalendarSelectChange(long fromDate, long toDate, boolean isSelectAll) {
                 Log.e("@@@@@",fromDate +"  " + toDate);
             }
         });

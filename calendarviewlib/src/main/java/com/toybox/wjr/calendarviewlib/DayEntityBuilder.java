@@ -15,7 +15,7 @@ public interface DayEntityBuilder {
      * @param timeMilli
      * @return
      */
-    List<DayEntity> buildMonthDayEntities(long timeMilli);
+    List<DayEntity> buildMonthDayEntities(long timeMilli,boolean isDefaultSelected);
 
     /**
      * 获取从frommilli 开始 monthCount 个月得完整数据
@@ -23,5 +23,5 @@ public interface DayEntityBuilder {
      * @param monthCount
      * @return
      */
-    List<List<DayEntity>> buildRangEntities(long fromMilli, int monthCount);
+    List<List<DayEntity>> buildRangEntities(long fromMilli, int monthCount,boolean isDefaultSelected);
 }

@@ -5,5 +5,5 @@ package com.toybox.wjr.calendarviewlib;
  */
 
 public interface CalendarSelectObserver {
-    void onCalendarSelectChange(long fromDate, long toDate);
+    void onCalendarSelectChange(long fromDate, long toDate, boolean isSelectAll);
 }

@@ -25,6 +25,7 @@ public class MonthAdapter extends RecyclerView.Adapter implements OnDayClickList
     DayEntityBuilder dayEntityBuilder;
     List<MonthEntity> monthItemEntities = new ArrayList<MonthEntity>();
     long currentLatestDate;
+    boolean isSelectAll;
 
     DayEntity startSelectedDay;
     DayEntity endSelectedDay;
@@ -39,14 +40,14 @@ public class MonthAdapter extends RecyclerView.Adapter implements OnDayClickList
         calendar.setTimeInMillis(System.currentTimeMillis());
 
         MonthEntity monthItemEntity = new MonthEntity();
-        monthItemEntity.dayItemEntities = this.dayEntityBuilder.buildMonthDayEntities(System.currentTimeMillis());
+        monthItemEntity.dayItemEntities = this.dayEntityBuilder.buildMonthDayEntities(System.currentTimeMillis(), false);
         monthItemEntity.month = calendar.get(Calendar.MONTH);
         monthItemEntity.year = calendar.get(Calendar.YEAR);
 
         //从11个月前开始，总计生成11个月
         calendar.add(Calendar.MONTH, -11);
         currentLatestDate = calendar.getTimeInMillis();
-        List<List<DayEntity>> monthList = dayEntityBuilder.buildRangEntities(calendar.getTimeInMillis(), 11);
+        List<List<DayEntity>> monthList = dayEntityBuilder.buildRangEntities(calendar.getTimeInMillis(), 11, false);
 
         for (int i = 0; i < 11; i++) {
             MonthEntity monthEntity = new MonthEntity();
@@ -102,7 +103,7 @@ public class MonthAdapter extends RecyclerView.Adapter implements OnDayClickList
         calendar.setTimeInMillis(currentLatestDate);
         calendar.add(Calendar.MONTH, count * -1);
         currentLatestDate = calendar.getTimeInMillis();
-        List<List<DayEntity>> monthList = dayEntityBuilder.buildRangEntities(calendar.getTimeInMillis(), count);
+        List<List<DayEntity>> monthList = dayEntityBuilder.buildRangEntities(calendar.getTimeInMillis(), count, isSelectAll);
         List<MonthEntity> monthEntities = new ArrayList<MonthEntity>();
         for (int i = 0; i < count; i++) {
             MonthEntity monthEntity = new MonthEntity();
@@ -112,6 +113,30 @@ public class MonthAdapter extends RecyclerView.Adapter implements OnDayClickList
             calendar.add(Calendar.MONTH, 1);
             monthEntities.add(monthEntity);
         }
+        if (isSelectAll) {
+            //旧的头
+            if (startMonth != null && startMonth.dayItemEntities != null){
+                int startDayIndex = startMonth.dayItemEntities.indexOf(startSelectedDay);
+                for (int i=0;i<startDayIndex +1;i++){
+                    DayEntity dayEntity=  startMonth.dayItemEntities.get(i);
+                    setDaySelectedStatus(dayEntity);
+                }
+            }
+            //新的头
+            if (!monthList.isEmpty()) {
+                startMonth = monthEntities.get(0);
+                for (int i = 0; i < startMonth.dayItemEntities.size(); i++) {
+                    DayEntity dayEntity = startMonth.dayItemEntities.get(i);
+                    if (dayEntity.isValid) {
+                        setStartSelectedDay(dayEntity);
+                        break;
+                    }else{
+                        resetDaySelectedStatus(dayEntity);
+                    }
+                }
+            }
+        }
+
         monthItemEntities.addAll(0, monthEntities);
     }
 
@@ -124,6 +149,13 @@ public class MonthAdapter extends RecyclerView.Adapter implements OnDayClickList
      */
     @Override
     public void onDayClick(MonthEntity monthEntity, DayEntity dayEntity) {
+        if (isSelectAll) {
+            isSelectAll = false;
+            resetSelected();
+            notifyDataSetChanged();
+            notifySelectedDateChange();
+            return;
+        }
         //选中了start和end后点击，取消旧的，再单独选中新的
         if (startSelectedDay != null && endSelectedDay != null) {
             resetSelected();
@@ -270,8 +302,28 @@ public class MonthAdapter extends RecyclerView.Adapter implements OnDayClickList
             dayEntity.isSelected = false;
             dayEntity.isSelectedEnd = false;
             dayEntity.isSelectedStart = false;
+            endSelectedDay = dayEntity;
         }
     }
+
+    public void setStartSelectedDay(DayEntity dayEntity) {
+        if (dayEntity != null) {
+            dayEntity.isSelected = true;
+            dayEntity.isSelectedStart = true;
+            dayEntity.isSelectedEnd = false;
+            startSelectedDay = dayEntity;
+        }
+    }
+
+    public void setEndSelectedDay(DayEntity dayEntity) {
+        if (dayEntity != null) {
+            dayEntity.isSelected = true;
+            dayEntity.isSelectedStart = false;
+            dayEntity.isSelectedEnd = true;
+            endSelectedDay = dayEntity;
+        }
+    }
+
 
     /**
      * 设置成未选中状态
@@ -308,7 +360,59 @@ public class MonthAdapter extends RecyclerView.Adapter implements OnDayClickList
             if (endSelectedDay != null) {
                 toDate = endSelectedDay.date;
             }
-            calendarSelectObserver.onCalendarSelectChange(fromDate, toDate);
+            calendarSelectObserver.onCalendarSelectChange(fromDate, toDate, isSelectAll);
         }
+    }
+
+    public void setIsSelectAll(boolean isSelectAll) {
+        this.isSelectAll = isSelectAll;
+        if (isSelectAll) {
+            startSelectedDay = null;
+            for (int i = 0; i < monthItemEntities.size(); i++) {
+                MonthEntity monthEntity = monthItemEntities.get(i);
+                if (monthEntity == null || monthEntity.dayItemEntities == null) {
+                    continue;
+                }
+                for (int r = 0; r < monthEntity.dayItemEntities.size(); r++) {
+                    DayEntity dayEntity = monthEntity.dayItemEntities.get(r);
+                    //第一个前面的不需要选中
+                    if (startSelectedDay != null) {
+                        setDaySelectedStatus(dayEntity);
+                    }
+                    //设置头部
+                    if (i == 0) {
+                        startMonth = monthItemEntities.get(i);
+                        if (r - 1 > 0) {
+                            DayEntity lastEntity = monthEntity.dayItemEntities.get(r - 1);
+                            if (lastEntity != null && dayEntity.isValid && !lastEntity.isValid) {
+                                setStartSelectedDay(dayEntity);
+                            }
+                        }
+                    }
+                    //设置尾部
+                    if (i == monthItemEntities.size() - 1) {
+                        endMonth = monthEntity;
+                        if (r + 1 < monthEntity.dayItemEntities.size()) {
+                            //有下一个但下一个是无效的，那么它就是尾巴了
+                            DayEntity nextEntity = monthEntity.dayItemEntities.get(r + 1);
+                            if (nextEntity != null && dayEntity.isValid && !nextEntity.isValid) {
+                                setEndSelectedDay(dayEntity);
+                                //最后一个之后的不用选中
+                                break;
+                            }
+                        } else if (dayEntity.isValid) {
+                            //最后一个且有效，那么它就是尾巴了
+                            setEndSelectedDay(dayEntity);
+                            break;
+                        }
+                    }
+
+                }
+            }
+        } else {
+            resetSelected();
+        }
+        notifyDataSetChanged();
+        notifySelectedDateChange();
     }
 }

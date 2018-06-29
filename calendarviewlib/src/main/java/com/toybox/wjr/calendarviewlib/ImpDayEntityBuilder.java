@@ -23,7 +23,7 @@ public class ImpDayEntityBuilder implements DayEntityBuilder {
         return returnTime;
     }
 
-    private List<DayEntity> buildMonthDayItems(final long fromDateMilli, final long toDateMilli, boolean isValid) {
+    private List<DayEntity> buildMonthDayItems(final long fromDateMilli, final long toDateMilli, boolean isValid, boolean isSelected) {
         List<DayEntity> list = new ArrayList<DayEntity>();
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(toDateMilli);
@@ -43,6 +43,7 @@ public class ImpDayEntityBuilder implements DayEntityBuilder {
         for (int i = 0; i < toValue - fromValue + 1; i++) {
             DayEntity entity = new DayEntity();
             entity.isValid = isValid;
+            entity.isSelected = isSelected;
             entity.displayValue = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
             entity.date = calendar.getTimeInMillis();
             list.add(entity);
@@ -52,19 +53,20 @@ public class ImpDayEntityBuilder implements DayEntityBuilder {
     }
 
 
-    private List<DayEntity> buildSplaceItem(final int count) {
+    private List<DayEntity> buildSplaceItem(final int count,boolean isDefaultSelected) {
         List<DayEntity> list = new ArrayList<DayEntity>();
         for (int i = 0; i < count; i++) {
             DayEntity entity = new DayEntity();
             entity.isValid = false;
             entity.displayValue = "";
+            entity.isSelected = isDefaultSelected;
             list.add(entity);
         }
         return list;
     }
 
     @Override
-    public List<DayEntity> buildMonthDayEntities(long timeMilli) {
+    public List<DayEntity> buildMonthDayEntities(long timeMilli, boolean isDefaultSelected) {
         List<DayEntity> list = new ArrayList<DayEntity>();
 
         Calendar calendar = Calendar.getInstance();
@@ -78,7 +80,7 @@ public class ImpDayEntityBuilder implements DayEntityBuilder {
         int monthFirstDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
         if (calendar.getFirstDayOfWeek() == Calendar.SUNDAY) {
             monthFirstDayOfWeek -= 1;
-            if (monthFirstDayOfWeek == 0){
+            if (monthFirstDayOfWeek == 0) {
                 monthFirstDayOfWeek = 7;
             }
         }
@@ -98,24 +100,24 @@ public class ImpDayEntityBuilder implements DayEntityBuilder {
             invalidDateCount = supplementEntityCount + detla;
         }
         //填空格
-        list.addAll(buildSplaceItem(monthFirstDayOfWeek - 1));
+        list.addAll(buildSplaceItem(monthFirstDayOfWeek - 1,isDefaultSelected));
         //填有效日期
-        list.addAll(buildMonthDayItems(monthFirstDayOfWeekTimeMilli, timeMilli, true));
+        list.addAll(buildMonthDayItems(monthFirstDayOfWeekTimeMilli, timeMilli, true, isDefaultSelected));
         //填无效日期
         if (invalidDateCount > 0) {
             calendar.add(Calendar.DAY_OF_MONTH, 1);
             long nextDateMilli = calendar.getTimeInMillis();
             calendar.add(Calendar.DAY_OF_MONTH, invalidDateCount - 1);
             long lastDateMilli = calendar.getTimeInMillis();
-            list.addAll(buildMonthDayItems(nextDateMilli, lastDateMilli, false));
+            list.addAll(buildMonthDayItems(nextDateMilli, lastDateMilli, false, isDefaultSelected));
         }
         //填空格
-        list.addAll(buildSplaceItem(splaceCount));
+        list.addAll(buildSplaceItem(splaceCount,isDefaultSelected));
         return list;
     }
 
     @Override
-    public List<List<DayEntity>> buildRangEntities(long fromMilli, int monthCount) {
+    public List<List<DayEntity>> buildRangEntities(long fromMilli, int monthCount, boolean isDefaultSelected) {
         List<List<DayEntity>> list = new ArrayList<List<DayEntity>>();
 
         Calendar monthCalendar = Calendar.getInstance();
@@ -129,7 +131,7 @@ public class ImpDayEntityBuilder implements DayEntityBuilder {
             int dayCount = dayCalendar.getActualMaximum(Calendar.DAY_OF_MONTH);
             dayCalendar.add(Calendar.DAY_OF_MONTH, dayCount - dayIndex);
             long endMilli = dayCalendar.getTimeInMillis();
-            list.add(buildMonthDayEntities(endMilli));
+            list.add(buildMonthDayEntities(endMilli, isDefaultSelected));
             monthCalendar.add(Calendar.MONTH, base);
         }
 

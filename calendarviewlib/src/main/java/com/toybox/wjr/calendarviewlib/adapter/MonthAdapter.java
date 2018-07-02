@@ -115,10 +115,10 @@ public class MonthAdapter extends RecyclerView.Adapter implements OnDayClickList
         }
         if (isSelectAll) {
             //旧的头
-            if (startMonth != null && startMonth.dayItemEntities != null){
+            if (startMonth != null && startMonth.dayItemEntities != null) {
                 int startDayIndex = startMonth.dayItemEntities.indexOf(startSelectedDay);
-                for (int i=0;i<startDayIndex +1;i++){
-                    DayEntity dayEntity=  startMonth.dayItemEntities.get(i);
+                for (int i = 0; i < startDayIndex + 1; i++) {
+                    DayEntity dayEntity = startMonth.dayItemEntities.get(i);
                     setDaySelectedStatus(dayEntity);
                 }
             }
@@ -130,7 +130,7 @@ public class MonthAdapter extends RecyclerView.Adapter implements OnDayClickList
                     if (dayEntity.isValid) {
                         setStartSelectedDay(dayEntity);
                         break;
-                    }else{
+                    } else {
                         resetDaySelectedStatus(dayEntity);
                     }
                 }
@@ -368,6 +368,7 @@ public class MonthAdapter extends RecyclerView.Adapter implements OnDayClickList
         this.isSelectAll = isSelectAll;
         if (isSelectAll) {
             startSelectedDay = null;
+            endSelectedDay = null;
             for (int i = 0; i < monthItemEntities.size(); i++) {
                 MonthEntity monthEntity = monthItemEntities.get(i);
                 if (monthEntity == null || monthEntity.dayItemEntities == null) {
@@ -380,17 +381,21 @@ public class MonthAdapter extends RecyclerView.Adapter implements OnDayClickList
                         setDaySelectedStatus(dayEntity);
                     }
                     //设置头部
-                    if (i == 0) {
+                    if (i == 0 && startSelectedDay == null) {
                         startMonth = monthItemEntities.get(i);
-                        if (r - 1 > 0) {
+                        if (r == 0 && dayEntity.isValid) {
+                            //前面没有空格
+                            setStartSelectedDay(dayEntity);
+                        } else if (r - 1 >= 0) {
                             DayEntity lastEntity = monthEntity.dayItemEntities.get(r - 1);
                             if (lastEntity != null && dayEntity.isValid && !lastEntity.isValid) {
+                                //前面有空格
                                 setStartSelectedDay(dayEntity);
                             }
                         }
                     }
                     //设置尾部
-                    if (i == monthItemEntities.size() - 1) {
+                    if (i == monthItemEntities.size() - 1 && endSelectedDay == null) {
                         endMonth = monthEntity;
                         if (r + 1 < monthEntity.dayItemEntities.size()) {
                             //有下一个但下一个是无效的，那么它就是尾巴了
